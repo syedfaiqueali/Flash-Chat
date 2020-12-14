@@ -7,20 +7,19 @@
 //
 
 import UIKit
-import CLTypingLabel
 
 class WelcomeViewController: UIViewController {
 
-    @IBOutlet weak var titleLabel: CLTypingLabel!
+    @IBOutlet weak var titleLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         //With self typing animating logic
-        //animatingTitleLabel()
+        animatingTitleLabel()
         
         // Using CLTypingLabel pod for animating
-        titleLabel.text = "⚡️FlashChat"
+        //titleLabel.text = "⚡️FlashChat"
     }
     
     //MARK:- Helper Functions
