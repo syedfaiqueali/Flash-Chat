@@ -271,7 +271,7 @@
             </objects>
             <point key="canvasLocation" x="1857.9710144927537" y="643.52678571428567"/>
         </scene>
-        <!--Chat View Controller-->
+        <!--⚡️FlashChat-->
         <scene sceneID="yeH-Ia-3JZ">
             <objects>
                 <viewController id="lwd-AH-u8E" customClass="ChatViewController" customModule="Flash_Chat_iOS13" customModuleProvider="target" sceneMemberID="viewController">
@@ -333,7 +333,7 @@
                             <constraint firstItem="S6L-hg-cne" firstAttribute="top" secondItem="6YX-ca-E8f" secondAttribute="top" id="sQt-L5-8LV"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="Q5u-eL-Bgp">
+                    <navigationItem key="navigationItem" title="⚡️FlashChat" id="Q5u-eL-Bgp">
                         <barButtonItem key="rightBarButtonItem" title="Log Out" id="P0H-RM-eui">
                             <connections>
                                 <action selector="logOutPressed:" destination="lwd-AH-u8E" id="7VZ-Q8-xL9"/>
@@ -357,6 +357,8 @@
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="HDa-YJ-2yB">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="tintColor" red="0.96078431369999995" green="0.94901960780000005" blue="0.94901960780000005" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="barTintColor" name="BrandBlue"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
