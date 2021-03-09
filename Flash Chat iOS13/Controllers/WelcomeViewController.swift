@@ -28,7 +28,7 @@ class WelcomeViewController: UIViewController {
         titleLabel.text = ""
         var charIndex = 0.0
         
-        let titleText = Constants.appName
+        let titleText = K.appName
         for letter in titleText {
             //print(0.1*charIndex, letter)
             Timer.scheduledTimer(withTimeInterval: 0.1 * charIndex, repeats: false) {(timer) in
