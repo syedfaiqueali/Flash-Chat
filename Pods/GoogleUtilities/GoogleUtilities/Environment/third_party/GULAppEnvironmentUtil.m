@@ -17,6 +17,7 @@
 #import <Foundation/Foundation.h>
 #import <dlfcn.h>
 #import <mach-o/dyld.h>
+#import <sys/sysctl.h>
 #import <sys/utsname.h>
 #import <objc/runtime.h>
 
@@ -212,12 +213,32 @@ static BOOL HasEmbeddedMobileProvision() {
   static dispatch_once_t once;
   static NSString *deviceModel;
 
+#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
+  dispatch_once(&once, ^{
+    // The `uname` function only returns x86_64 for Macs. Use `sysctlbyname` instead, but fall back
+    // to the `uname` function if it fails.
+    size_t size;
+    sysctlbyname("hw.model", NULL, &size, NULL, 0);
+    if (size > 0) {
+      char *machine = malloc(size);
+      sysctlbyname("hw.model", machine, &size, NULL, 0);
+      deviceModel = [NSString stringWithCString:machine encoding:NSUTF8StringEncoding];
+      free(machine);
+    } else {
+      struct utsname systemInfo;
+      if (uname(&systemInfo) == 0) {
+        deviceModel = [NSString stringWithUTF8String:systemInfo.machine];
+      }
+    }
+  });
+#else
   dispatch_once(&once, ^{
     struct utsname systemInfo;
     if (uname(&systemInfo) == 0) {
       deviceModel = [NSString stringWithUTF8String:systemInfo.machine];
     }
   });
+#endif  // TARGET_OS_OSX || TARGET_OS_MACCATALYST
   return deviceModel;
 }
 
@@ -272,14 +293,25 @@ static BOOL HasEmbeddedMobileProvision() {
 #if TARGET_OS_MACCATALYST
   applePlatform = @"maccatalyst";
 #elif TARGET_OS_IOS
+#if defined(__IPHONE_14_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= 140000
+  if (@available(iOS 14.0, *)) {
+    // Early iOS 14 betas do not include isiOSAppOnMac (#6969)
+    applePlatform = ([[NSProcessInfo processInfo] respondsToSelector:@selector(isiOSAppOnMac)] &&
+                      [NSProcessInfo processInfo].isiOSAppOnMac) ? @"ios_on_mac" : @"ios";
+  } else {
+    applePlatform = @"ios";
+  }
+#else // defined(__IPHONE_14_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= 140000
   applePlatform = @"ios";
+#endif // defined(__IPHONE_14_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= 140000
+
 #elif TARGET_OS_TV
   applePlatform = @"tvos";
 #elif TARGET_OS_OSX
   applePlatform = @"macos";
 #elif TARGET_OS_WATCH
   applePlatform = @"watchos";
-#endif
+#endif // TARGET_OS_MACCATALYST
 
   return applePlatform;
 }
