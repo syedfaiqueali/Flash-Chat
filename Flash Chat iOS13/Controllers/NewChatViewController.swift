@@ -106,3 +106,6 @@ struct TextMessage {
         self.userType = userType
     }
 }
+
+
+//https://swiftbyshanks.medium.com/5-steps-to-setup-cloud-messaging-using-firebase-on-ios-385aceea331c
